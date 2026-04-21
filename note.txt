@@ -1,0 +1,2 @@
+see result panel: /result/id
+service_lmstudio.py dùng lmstudio nhằm tăng tốc
