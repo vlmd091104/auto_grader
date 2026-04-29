@@ -3,7 +3,6 @@ import json
 import requests
 from flask import Flask, request, jsonify
 
-from auto_grader_service_llm import normalize_points
 app = Flask(__name__)
 
 LM_STUDIO_URL = "http://localhost:1234/v1/chat/completions"
@@ -17,6 +16,15 @@ def bow_fallback_grading(student_text):
     feedback = f"Fallback Scoring: Found {idea_matches} logical connectors and {word_count} words."
     return i_pts, c_pts, feedback
 @app.route("/auto-grade", methods=["POST"])
+def normalize_points(pts, allowed_tiers):
+    """
+    Ensures points match valid tiers (e.g., mapping 25 to 5).
+    """
+    try:
+        val = int(pts)
+        return min(allowed_tiers, key=lambda x: abs(x - val))
+    except:
+        return 0
 def auto_grade():
     data = request.get_json(force=True)
     student_text = data.get("text", "").strip()
