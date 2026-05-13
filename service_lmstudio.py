@@ -15,7 +15,6 @@ def bow_fallback_grading(student_text):
     c_pts = 5 if word_count >= 50 else (3 if word_count >= 20 else (1 if word_count > 0 else 0))   
     feedback = f"Fallback Scoring: Found {idea_matches} logical connectors and {word_count} words."
     return i_pts, c_pts, feedback
-@app.route("/auto-grade", methods=["POST"])
 def normalize_points(pts, allowed_tiers):
     """
     Ensures points match valid tiers (e.g., mapping 25 to 5).
@@ -25,6 +24,7 @@ def normalize_points(pts, allowed_tiers):
         return min(allowed_tiers, key=lambda x: abs(x - val))
     except:
         return 0
+@app.route("/auto-grade", methods=["POST"])
 def auto_grade():
     data = request.get_json(force=True)
     student_text = data.get("text", "").strip()
